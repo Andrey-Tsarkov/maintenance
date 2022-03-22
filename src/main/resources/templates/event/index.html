@@ -1,0 +1,46 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<div class="mb-3">
+    <a th:href="@{/event/create-form}"><button type="button" class="btn btn-primary">Создать</button></a>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-primary">
+        <tr>
+            <th>Id</th>
+            <th>Работа</th>
+            <th>Пробег</th>
+            <th>Дата</th>
+            <th>Правка</th>
+            <th>Удалить</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each=" event: ${events}">
+            <th th:text="${event.getId()}">id</th>
+            <th th:text="${event.getActionId()}">id</th>
+            <th th:text="${event.getMileage()}">id</th>
+            <th th:text="${event.getEventDate()}">id</th>
+            <td><a th:href="@{/event/{id}/edit-form(id=${event.getId()})}"><button type="button" class="btn btn-primary">&#128221;</button></a></td>
+            <td><button type="button" class="btn btn-danger" th:onclick="deleteEventById([[${event.getId()}]]);">X</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    async function deleteEventById(id) {
+        if (!confirm("Подтвердите удаление записи")) {
+            return;
+        }
+        let response = await fetch('/api/event/' + id, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            alert("Ошибка HTTP: " + response.status);
+        }
+    }
+</script>
+
+</th:block>

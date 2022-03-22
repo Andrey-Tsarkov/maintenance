@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public record ActionService(ActionRepository actionRepository) {
-    public void deleteActionTypeById(int id) {
+    public void deleteById(int id) {
         actionRepository.deleteById(id);
     }
 

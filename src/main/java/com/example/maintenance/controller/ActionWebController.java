@@ -11,15 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping(value = "action")
 public class ActionWebController extends AbstractWebController {
     private final ActionService actionService;
 
-    public ActionWebController(ActionService actionTypeService) {
-        this.actionService = actionTypeService;
+    public ActionWebController(ActionService actionService) {
+        this.actionService = actionService;
     }
 
-    @GetMapping(value = "action")
-    public String viewActionList(Model model) {
+    @GetMapping(value = "")
+    public String viewList(Model model) {
         model.addAttribute("content", "action/index");
         model.addAttribute("title", "Справочник регламентных работ");
         model.addAttribute("actions", actionService.getAll());
@@ -27,8 +28,8 @@ public class ActionWebController extends AbstractWebController {
         return this.getBaseLayoutTemplate();
     }
 
-    @GetMapping(value = "action/create-form")
-    public String viewCreateActionForm(Model model) {
+    @GetMapping(value = "/create-form")
+    public String viewCreateForm(Model model) {
         model.addAttribute("title", "Создание регламентной работы");
         model.addAttribute("content", "action/create");
         model.addAttribute("actionEntity", new ActionEntity());
@@ -36,12 +37,13 @@ public class ActionWebController extends AbstractWebController {
         return this.getBaseLayoutTemplate();
     }
 
-    @PostMapping(value = "action/add")
-    public String postAddAction(@ModelAttribute("actionEntity") @Valid ActionEntity actionEntity, BindingResult bindingResult, Model model) {
+    @PostMapping(value = "/add")
+    public String post(@ModelAttribute("actionEntity") @Valid ActionEntity actionEntity, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("actionEntity", actionEntity);
             model.addAttribute("title", "Создание регламентной работы (уточнение полей)");
             model.addAttribute("content", "action/create");
+
             return this.getBaseLayoutTemplate();
         }
 
@@ -50,12 +52,13 @@ public class ActionWebController extends AbstractWebController {
         return "redirect:/action";
     }
 
-    @GetMapping(value = "action/{id}/edit-form")
-    public String viewEditActionForm(HttpServletResponse response, Model model, @PathVariable int id) {
+    @GetMapping(value = "/{id}/edit-form")
+    public String viewEditForm(HttpServletResponse response, Model model, @PathVariable int id) {
         model.addAttribute("title", "Правка регламентной работы #" + id);
         ActionEntity actionEntity = actionService.getById(id);
         if (null == actionEntity) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
             return this.get404LayoutTemplate(model, "Не найдена сущность #" + id);
         }
 
@@ -65,8 +68,8 @@ public class ActionWebController extends AbstractWebController {
         return this.getBaseLayoutTemplate();
     }
 
-    @PutMapping(value = "action/{id}")
-    public String putUser(HttpServletResponse response, @PathVariable int id, @ModelAttribute("actionEntity") @Valid ActionEntity actionEntity, BindingResult bindingResult, Model model) {
+    @PutMapping(value = "/{id}")
+    public String put(HttpServletResponse response, @PathVariable int id, @ModelAttribute("actionEntity") @Valid ActionEntity actionEntity, BindingResult bindingResult, Model model) {
         model.addAttribute("content", "action/edit");
         model.addAttribute("title", "Правка регламентной работы #" + id + " (уточнение полей)");
         model.addAttribute("actionEntity", actionEntity);
@@ -78,6 +81,7 @@ public class ActionWebController extends AbstractWebController {
         ActionEntity originActionEntity = actionService.getById(id);
         if (null == originActionEntity) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
             return this.get404LayoutTemplate(model, "Не найдена сущность #" + id);
         }
 

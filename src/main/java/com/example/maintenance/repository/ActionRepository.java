@@ -12,16 +12,16 @@ import java.util.List;
 public class ActionRepository {
     private final EntityManager entityManager;
 
-    public ActionEntity getById(int id) {
-        return entityManager.find(ActionEntity.class, id);
-    }
-
     public ActionRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    public ActionEntity getById(int id) {
+        return entityManager.find(ActionEntity.class, id);
+    }
+
     public List<ActionEntity> getAll() {
-        return entityManager.createQuery("SELECT e FROM ActionEntity e", ActionEntity.class).getResultList();
+        return entityManager.createQuery("SELECT e FROM ActionEntity e ORDER BY e.id ASC", ActionEntity.class).getResultList();
     }
 
     public void deleteById(int id) {

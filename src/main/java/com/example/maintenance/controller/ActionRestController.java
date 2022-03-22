@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/action", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ActionRestController {
-    private final ActionService actionTypeService;
+    private final ActionService actionService;
 
-    public ActionRestController(ActionService actionTypeService) {
-        this.actionTypeService = actionTypeService;
+    public ActionRestController(ActionService actionService) {
+        this.actionService = actionService;
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUserById(@PathVariable("id") int id) {
-        actionTypeService.deleteActionTypeById(id);
+    public void deleteById(@PathVariable("id") int id) {
+        actionService.deleteById(id);
     }
 }
