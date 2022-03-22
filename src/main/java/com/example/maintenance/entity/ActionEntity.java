@@ -1,6 +1,9 @@
 package com.example.maintenance.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "action")
@@ -10,9 +13,12 @@ public class ActionEntity {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Length(min = 3, max = 255)
+    @NotBlank
     @Column(name = "name", nullable = false)
     private String name;
 
+    @PositiveOrZero
     @Column(name = "sort")
     private Integer sort;
 

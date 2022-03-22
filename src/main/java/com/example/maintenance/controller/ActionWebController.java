@@ -41,7 +41,7 @@ public class ActionWebController extends AbstractWebController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("actionEntity", actionEntity);
             model.addAttribute("title", "Создание регламентной работы (уточнение полей)");
-            model.addAttribute("content", "action/create-form");
+            model.addAttribute("content", "action/create");
             return this.getBaseLayoutTemplate();
         }
 
