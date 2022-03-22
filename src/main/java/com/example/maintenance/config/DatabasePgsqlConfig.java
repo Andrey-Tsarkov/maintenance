@@ -11,6 +11,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
 
+/**
+ * Конфигурация утоняет связь EM (entity, repository) с конкретной БД
+ */
 @EnableJpaRepositories(
         entityManagerFactoryRef = DatabasePgsqlConfig.ENTITY_MANAGER_FACTORY,
         transactionManagerRef = DatabasePgsqlConfig.TRANSACTION_MANAGER,
@@ -19,8 +22,8 @@ import javax.sql.DataSource;
 @Configuration
 public class DatabasePgsqlConfig {
 
-    public static final String JPA_REPOSITORY_PACKAGE = "com.example.demo.repository.pgsql";
-    public static final String ENTITY_PACKAGE = "com.example.demo.entity.pgsql";
+    public static final String JPA_REPOSITORY_PACKAGE = "com.example.maintenance.repository";
+    public static final String ENTITY_PACKAGE = "com.example.maintenance.entity";
 
     public static final String ENTITY_MANAGER_FACTORY = "pgsqlEntityManagerFactory";
     public static final String DATA_SOURCE = "pgsqlDataSource";

@@ -5,11 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class MainController {
-
+public class MainWebController extends AbstractWebController {
     @GetMapping("/")
     public String getIndex(Model model) {
+        model.addAttribute("content", "base/home");
         model.addAttribute("title", "Главная");
-        return "base/index";
+        return this.getBaseLayoutTemplate();
     }
 }

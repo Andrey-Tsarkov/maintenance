@@ -1,0 +1,17 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<form th:method="POST" th:action="@{/action/add}" th:object="${actionEntity}">
+    <div class="mb-3">
+        <label for="name" class="form-label">Название работ</label>
+        <input type="text" id="name" th:field="*{name}" class="form-control" required/>
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback">Name Error</div>
+    </div>
+    <div class="col-md-1 mb-3">
+        <label for="sort" class="form-label">Сортировка</label>
+        <input type="text" id="sort" th:field="*{sort}" class="form-control"/>
+        <div th:if="${#fields.hasErrors('sort')}" th:errors="*{sort}" class="invalid-feedback">Sort Error</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Создать</button>
+</form>
+
+</th:block>

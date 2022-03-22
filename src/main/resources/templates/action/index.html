@@ -1,0 +1,44 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<div class="mb-3">
+    <a th:href="@{/action/create-form}"><button type="button" class="btn btn-primary">Создать</button></a>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-primary">
+        <tr>
+            <th>Id</th>
+            <th>Действие</th>
+            <th>Сортировка</th>
+            <th>Правка</th>
+            <th>Удалить</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each=" action: ${actions}">
+            <th th:text="${action.getId()}">id</th>
+            <td th:text="${action.getName()}">login</td>
+            <td th:text="${action.getSort()}">login</td>
+            <td><a th:href="@{/action/{id}/edit-form(id=${action.getId()})}"><button type="button" class="btn btn-primary">&#128221;</button></a></td>
+            <td><button type="button" class="btn btn-danger" th:onclick="deleteActionTypeById([[${action.getId()}]]);">X</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    async function deleteActionTypeById(id) {
+        if (!confirm("Подтвердите удаление записи")) {
+            return;
+        }
+        let response = await fetch('/api/action/' + id, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            alert("Ошибка HTTP: " + response.status);
+        }
+    }
+</script>
+
+</th:block>
