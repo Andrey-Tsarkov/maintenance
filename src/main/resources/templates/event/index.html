@@ -21,8 +21,13 @@
             <th th:text="${event.getActionId()}">id</th>
             <th th:text="${event.getMileage()}">id</th>
             <th th:text="${event.getEventDate()}">id</th>
-            <td><a th:href="@{/event/{id}/edit-form(id=${event.getId()})}"><button type="button" class="btn btn-primary">&#128221;</button></a></td>
-            <td><button type="button" class="btn btn-danger" th:onclick="deleteEventById([[${event.getId()}]]);">X</button></td>
+            <td>
+                <a th:href="@{/event/{id}/edit-form(id=${event.getId()})}">
+                    <button type="button" class="btn btn-primary">&#128221;</button>
+                </a>
+            </td>
+            <td><button type="button" th:onclick="deleteEventById([[${event.getId()}]]);"
+                        class="btn btn-danger">X</button></td>
         </tr>
     </tbody>
 </table>

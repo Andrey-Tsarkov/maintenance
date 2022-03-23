@@ -38,7 +38,11 @@ public class EventWebController extends AbstractWebController {
     }
 
     @PostMapping(value = "add")
-    public String post(@ModelAttribute("eventEntity") @Valid EventEntity eventEntity, BindingResult bindingResult, Model model) {
+    public String post(
+            @ModelAttribute("eventEntity") @Valid EventEntity eventEntity,
+            BindingResult bindingResult,
+            Model model
+    ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("eventEntity", eventEntity);
             model.addAttribute("title", "Создание проведеной работы (уточнение полей)");
@@ -53,13 +57,17 @@ public class EventWebController extends AbstractWebController {
     }
 
     @GetMapping(value = "{id}/edit-form")
-    public String viewEditForm(HttpServletResponse response, Model model, @PathVariable int id) {
+    public String viewEditForm(
+            @PathVariable int id,
+            Model model,
+            HttpServletResponse response
+    ) {
         model.addAttribute("title", "Правка проведеной работы #" + id);
         EventEntity eventEntity = eventService.getById(id);
         if (null == eventEntity) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-            return this.get404LayoutTemplate(model, "Не найдена сущность #" + id);
+            return this.getLayoutTemplateWith404Details(model, "Не найдена сущность #" + id);
         }
 
         model.addAttribute("content", "event/edit");
@@ -69,7 +77,13 @@ public class EventWebController extends AbstractWebController {
     }
 
     @PutMapping(value = "{id}")
-    public String put(HttpServletResponse response, @PathVariable int id, @ModelAttribute("eventEntity") @Valid EventEntity eventEntity, BindingResult bindingResult, Model model) {
+    public String put(
+            @PathVariable int id,
+            @ModelAttribute("eventEntity") @Valid EventEntity eventEntity,
+            BindingResult bindingResult,
+            Model model,
+            HttpServletResponse response
+    ) {
         model.addAttribute("content", "event/edit");
         model.addAttribute("title", "Правка проведеной работы #" + id + " (уточнение полей)");
         model.addAttribute("eventEntity", eventEntity);
@@ -78,11 +92,10 @@ public class EventWebController extends AbstractWebController {
             return this.getBaseLayoutTemplate();
         }
 
-        EventEntity originEventEntity = eventService.getById(id);
-        if (null == originEventEntity) {
+        if (null == eventService.getById(id)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-            return this.get404LayoutTemplate(model, "Не найдена сущность #" + id);
+            return this.getLayoutTemplateWith404Details(model, "Не найдена сущность #" + id);
         }
 
         eventService.save(eventEntity);

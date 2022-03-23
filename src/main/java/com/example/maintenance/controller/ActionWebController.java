@@ -38,7 +38,11 @@ public class ActionWebController extends AbstractWebController {
     }
 
     @PostMapping(value = "/add")
-    public String post(@ModelAttribute("actionEntity") @Valid ActionEntity actionEntity, BindingResult bindingResult, Model model) {
+    public String post(
+            @ModelAttribute("actionEntity") @Valid ActionEntity actionEntity,
+            BindingResult bindingResult,
+            Model model
+    ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("actionEntity", actionEntity);
             model.addAttribute("title", "Создание регламентной работы (уточнение полей)");
@@ -53,13 +57,17 @@ public class ActionWebController extends AbstractWebController {
     }
 
     @GetMapping(value = "/{id}/edit-form")
-    public String viewEditForm(HttpServletResponse response, Model model, @PathVariable int id) {
+    public String viewEditForm(
+            @PathVariable int id,
+            Model model,
+            HttpServletResponse response
+    ) {
         model.addAttribute("title", "Правка регламентной работы #" + id);
         ActionEntity actionEntity = actionService.getById(id);
         if (null == actionEntity) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-            return this.get404LayoutTemplate(model, "Не найдена сущность #" + id);
+            return this.getLayoutTemplateWith404Details(model, "Не найдена сущность #" + id);
         }
 
         model.addAttribute("content", "action/edit");
@@ -69,7 +77,13 @@ public class ActionWebController extends AbstractWebController {
     }
 
     @PutMapping(value = "/{id}")
-    public String put(HttpServletResponse response, @PathVariable int id, @ModelAttribute("actionEntity") @Valid ActionEntity actionEntity, BindingResult bindingResult, Model model) {
+    public String put(
+            @PathVariable int id,
+            @ModelAttribute("actionEntity") @Valid ActionEntity actionEntity,
+            BindingResult bindingResult,
+            Model model,
+            HttpServletResponse response
+    ) {
         model.addAttribute("content", "action/edit");
         model.addAttribute("title", "Правка регламентной работы #" + id + " (уточнение полей)");
         model.addAttribute("actionEntity", actionEntity);
@@ -78,11 +92,10 @@ public class ActionWebController extends AbstractWebController {
             return this.getBaseLayoutTemplate();
         }
 
-        ActionEntity originActionEntity = actionService.getById(id);
-        if (null == originActionEntity) {
+        if (null == actionService.getById(id)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
-            return this.get404LayoutTemplate(model, "Не найдена сущность #" + id);
+            return this.getLayoutTemplateWith404Details(model, "Не найдена сущность #" + id);
         }
 
         actionService.save(actionEntity);

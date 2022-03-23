@@ -3,7 +3,6 @@ package com.example.maintenance.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
@@ -20,8 +19,8 @@ public class EventEntity {
     private Integer actionId;
 
     @PositiveOrZero
-    @Column(name = "mileage", nullable = false)
-    private Integer mileage;
+    @Column(name = "mileage", columnDefinition = "integer default 0")
+    private Integer mileage = 0;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "event_date")

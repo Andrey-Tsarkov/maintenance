@@ -7,7 +7,7 @@ public abstract class AbstractWebController {
         return "base/layout";
     }
 
-    protected String get404LayoutTemplate(Model model, String details) {
+    protected String getLayoutTemplateWith404Details(Model model, String details) {
         model.addAttribute("content", "base/error");
         model.addAttribute("details", details);
 

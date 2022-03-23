@@ -21,7 +21,10 @@ public class EventRepository {
     }
 
     public List<EventEntity> getAll() {
-        return entityManager.createQuery("SELECT e FROM EventEntity e", EventEntity.class).getResultList();
+        return entityManager.createQuery(
+                "SELECT e FROM EventEntity e ORDER BY e.mileage DESC, e.eventDate DESC",
+                EventEntity.class
+        ).getResultList();
     }
 
     public void deleteById(int id) {

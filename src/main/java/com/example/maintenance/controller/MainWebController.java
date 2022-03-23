@@ -10,6 +10,7 @@ public class MainWebController extends AbstractWebController {
     public String getIndex(Model model) {
         model.addAttribute("content", "base/home");
         model.addAttribute("title", "Главная");
+
         return this.getBaseLayoutTemplate();
     }
 }

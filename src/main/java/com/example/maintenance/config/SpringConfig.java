@@ -71,7 +71,8 @@ public class SpringConfig implements WebMvcConfigurer {
     // Активировать подмену методов PUT, PATCH и пр. по наличю скрытых полей в html-формах
     @Bean
     public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenHttpMethodFilter() {
-        FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistration = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
+        FilterRegistrationBean<HiddenHttpMethodFilter> filterRegistration =
+                new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
         filterRegistration.setUrlPatterns(List.of("/*"));
 
         return filterRegistration;
