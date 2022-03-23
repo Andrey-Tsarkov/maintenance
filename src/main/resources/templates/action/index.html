@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr th:each=" action: ${actions}">
+        <tr th:each="action: ${actions}">
             <th th:text="${action.getId()}">id</th>
             <td th:text="${action.getName()}">login</td>
             <td th:text="${action.getSort()}">login</td>

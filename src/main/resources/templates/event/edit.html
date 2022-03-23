@@ -3,7 +3,14 @@
 <form th:method="PUT" th:action="@{/event/{id}(id=${eventEntity.getId()})}" th:object="${eventEntity}">
     <div class="mb-3">
         <label for="actionId" class="form-label">Тип работ</label>
-        <input type="text" id="actionId" th:field="*{actionId}" class="form-control" required/>
+        <select id="actionId" name="actionId" class="form-select" required>
+            <option selected disabled value="">Выберите регламентную работу</option>
+            <option th:each="action: ${actions}" th:value="${action.getId()}"
+                    th:selected="${action.getId()==eventEntity.getActionId()}"
+                    th:text="${action.getName()}">
+                Регламентная работа
+            </option>
+        </select>
         <div th:if="${#fields.hasErrors('actionId')}" th:errors="*{actionId}"
              class="invalid-feedback show">actionId Error</div>
     </div>

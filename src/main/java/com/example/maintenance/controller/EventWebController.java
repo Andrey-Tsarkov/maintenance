@@ -1,6 +1,7 @@
 package com.example.maintenance.controller;
 
 import com.example.maintenance.entity.EventEntity;
+import com.example.maintenance.service.ActionService;
 import com.example.maintenance.service.EventService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,11 @@ import javax.validation.Valid;
 @RequestMapping(value = "event")
 public class EventWebController extends AbstractWebController {
     private final EventService eventService;
+    private final ActionService actionService;
 
-    public EventWebController(EventService eventService) {
+    public EventWebController(EventService eventService, ActionService actionService) {
         this.eventService = eventService;
+        this.actionService = actionService;
     }
 
     @GetMapping(value = "")
@@ -33,6 +36,7 @@ public class EventWebController extends AbstractWebController {
         model.addAttribute("title", "Создание проведеной работы");
         model.addAttribute("content", "event/create");
         model.addAttribute("eventEntity", new EventEntity());
+        model.addAttribute("actions", actionService.getAll());
 
         return this.getBaseLayoutTemplate();
     }
@@ -44,9 +48,10 @@ public class EventWebController extends AbstractWebController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("eventEntity", eventEntity);
             model.addAttribute("title", "Создание проведеной работы (уточнение полей)");
             model.addAttribute("content", "event/create");
+            model.addAttribute("eventEntity", eventEntity);
+            model.addAttribute("actions", actionService.getAll());
 
             return this.getBaseLayoutTemplate();
         }
@@ -72,6 +77,7 @@ public class EventWebController extends AbstractWebController {
 
         model.addAttribute("content", "event/edit");
         model.addAttribute("eventEntity", eventEntity);
+        model.addAttribute("actions", actionService.getAll());
 
         return this.getBaseLayoutTemplate();
     }
@@ -84,11 +90,12 @@ public class EventWebController extends AbstractWebController {
             Model model,
             HttpServletResponse response
     ) {
-        model.addAttribute("content", "event/edit");
-        model.addAttribute("title", "Правка проведеной работы #" + id + " (уточнение полей)");
-        model.addAttribute("eventEntity", eventEntity);
-
         if (bindingResult.hasErrors()) {
+            model.addAttribute("content", "event/edit");
+            model.addAttribute("title", "Правка проведеной работы #" + id + " (уточнение полей)");
+            model.addAttribute("eventEntity", eventEntity);
+            model.addAttribute("actions", actionService.getAll());
+
             return this.getBaseLayoutTemplate();
         }
 

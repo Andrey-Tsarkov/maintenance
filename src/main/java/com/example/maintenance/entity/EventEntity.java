@@ -3,6 +3,9 @@ package com.example.maintenance.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
@@ -14,7 +17,8 @@ public class EventEntity {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @PositiveOrZero
+    @Positive(message = "Должно быть задано")
+    @NotNull(message = "Должно быть задано")
     @Column(name = "action_id", nullable = false)
     private Integer actionId;
 

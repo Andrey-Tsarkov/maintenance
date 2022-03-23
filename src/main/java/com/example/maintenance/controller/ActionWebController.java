@@ -44,9 +44,9 @@ public class ActionWebController extends AbstractWebController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("actionEntity", actionEntity);
             model.addAttribute("title", "Создание регламентной работы (уточнение полей)");
             model.addAttribute("content", "action/create");
+            model.addAttribute("actionEntity", actionEntity);
 
             return this.getBaseLayoutTemplate();
         }
@@ -84,11 +84,11 @@ public class ActionWebController extends AbstractWebController {
             Model model,
             HttpServletResponse response
     ) {
-        model.addAttribute("content", "action/edit");
-        model.addAttribute("title", "Правка регламентной работы #" + id + " (уточнение полей)");
-        model.addAttribute("actionEntity", actionEntity);
-
         if (bindingResult.hasErrors()) {
+            model.addAttribute("content", "action/edit");
+            model.addAttribute("title", "Правка регламентной работы #" + id + " (уточнение полей)");
+            model.addAttribute("actionEntity", actionEntity);
+
             return this.getBaseLayoutTemplate();
         }
 
