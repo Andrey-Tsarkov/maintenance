@@ -21,10 +21,12 @@ public class ActionRepository {
     }
 
     public List<ActionEntity> getAll() {
-        return entityManager.createQuery(
+        List<ActionEntity> result = entityManager.createQuery(
                 "SELECT e FROM ActionEntity e ORDER BY e.id ASC",
                 ActionEntity.class
         ).getResultList();
+
+        return result;
     }
 
     public void deleteById(int id) {
