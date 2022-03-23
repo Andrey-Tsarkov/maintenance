@@ -1,9 +1,10 @@
 package com.example.maintenance.entity;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -29,6 +30,11 @@ public class EventEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "event_date")
     private LocalDate eventDate;
+
+    @ManyToOne
+    @JoinColumn(name="action_id", referencedColumnName="id", insertable=false, updatable=false)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private ActionEntity actionEntity;
 
     public LocalDate getEventDate() {
         return eventDate;
@@ -60,5 +66,13 @@ public class EventEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public ActionEntity getActionEntity() {
+        return actionEntity;
+    }
+
+    public void setActionEntity(ActionEntity actionEntity) {
+        this.actionEntity = actionEntity;
     }
 }
