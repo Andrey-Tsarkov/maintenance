@@ -22,7 +22,7 @@ public class EventRepository {
 
     public List<EventEntity> getAll() {
         List<EventEntity> result =  entityManager.createQuery(
-                "SELECT e FROM EventEntity e LEFT JOIN FETCH e.actionEntity ORDER BY e.mileage DESC, e.eventDate DESC",
+                "SELECT e FROM EventEntity e ORDER BY e.mileage DESC, e.eventDate DESC",
                 EventEntity.class
         ).getResultList();
 

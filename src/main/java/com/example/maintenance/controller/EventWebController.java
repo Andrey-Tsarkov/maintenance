@@ -27,6 +27,7 @@ public class EventWebController extends AbstractWebController {
         model.addAttribute("content", "event/index");
         model.addAttribute("title", "Проведенные работы");
         model.addAttribute("events", eventService.getAll());
+        model.addAttribute("actionHashMap", actionService.getHashMapAll());
 
         return this.getBaseLayoutTemplate();
     }

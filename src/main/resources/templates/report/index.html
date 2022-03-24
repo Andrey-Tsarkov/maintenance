@@ -1,0 +1,39 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<div id="error" style="color: red;"></div>
+<div id="report"></div>
+
+<script>
+    document.onreadystatechange = function () {
+        if (document.readyState == "complete") {
+            getReport();
+        }
+    }
+
+    function getReport() {
+        fetch('/api/action/report')
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        showError('Ошибка получения данных. Status Code: ' + response.status);
+                    }
+                    response.json().then(function(data) {
+                        buildReport(data);
+                    });
+                }
+            )
+            .catch(function(err) {
+                showError('Fetch Error:', err);
+            });
+    }
+
+    function showError(message) {
+        document.getElementById("error").innerText = message;
+    }
+
+    function buildReport(report) {
+        document.getElementById("report").innerText = JSON.stringify(report);
+    }
+</script>
+
+</th:block>

@@ -3,8 +3,9 @@
 <div class="mb-3">
     <a th:href="@{/event/create-form}"><button type="button" class="btn btn-primary">Создать</button></a>
 </div>
-
-<table class="table table-bordered table-hover">
+<p>
+</p>
+<table class="table table-bordered table-hover" th:object="${actionHashMap}">
     <thead class="table-primary">
         <tr>
             <th>Id</th>
@@ -18,7 +19,7 @@
     <tbody>
         <tr th:each="event: ${events}">
             <td th:text="${event.getId()}">id</td>
-            <td th:text="${event.getActionEntity()?.getName()}">actionId</td>
+            <td th:text="${actionHashMap[event.getActionId()].getName()}">actionName</td>
             <td th:text="${event.getMileage()}">id</td>
             <td th:text="${event.getEventDate()}">id</td>
             <td>

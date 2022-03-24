@@ -1,9 +1,12 @@
 package com.example.maintenance.entity;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 @Table(name = "action")
@@ -21,6 +24,11 @@ public class ActionEntity {
     @PositiveOrZero
     @Column(name = "sort")
     private Integer sort;
+
+    @OneToMany
+    @JoinColumn(name="action_id", referencedColumnName="id", insertable=false, updatable=false)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private List<EventEntity> eventEntityList;
 
     public Integer getSort() {
         return sort;
@@ -44,5 +52,13 @@ public class ActionEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<EventEntity> getEventEntityList() {
+        return eventEntityList;
+    }
+
+    public void setEventEntityList(List<EventEntity> eventEntityList) {
+        this.eventEntityList = eventEntityList;
     }
 }

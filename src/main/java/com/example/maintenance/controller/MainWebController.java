@@ -14,10 +14,10 @@ public class MainWebController extends AbstractWebController {
         return this.getBaseLayoutTemplate();
     }
 
-    @GetMapping(value = "picture")
+    @GetMapping(value = "report")
     public String viewPicture(Model model) {
-        model.addAttribute("content", "picture/index");
-        model.addAttribute("title", "Картина проведенных работ");
+        model.addAttribute("content", "report/index");
+        model.addAttribute("title", "Отчет");
 
         return this.getBaseLayoutTemplate();
 

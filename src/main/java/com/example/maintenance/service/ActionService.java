@@ -4,6 +4,7 @@ import com.example.maintenance.entity.ActionEntity;
 import com.example.maintenance.repository.ActionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -12,8 +13,23 @@ public record ActionService(ActionRepository actionRepository) {
         actionRepository.deleteById(id);
     }
 
+    public HashMap<Integer, ActionEntity> getHashMapAll() {
+        List<ActionEntity> actionEntities = actionRepository.getAll();
+
+        HashMap<Integer, ActionEntity> actionEntityHashMap = new HashMap<>();
+        for (ActionEntity actionEntity: actionEntities) {
+            actionEntityHashMap.put(actionEntity.getId(), actionEntity);
+        }
+
+        return actionEntityHashMap;
+    }
+
     public List<ActionEntity> getAll() {
         return actionRepository.getAll();
+    }
+
+    public List<ActionEntity> getReport() {
+        return actionRepository.getReport();
     }
 
     public ActionEntity getById(int id) {

@@ -29,6 +29,15 @@ public class ActionRepository {
         return result;
     }
 
+    public List<ActionEntity> getReport() {
+        List<ActionEntity> result = entityManager.createQuery(
+                "SELECT e FROM ActionEntity e JOIN FETCH e.eventEntityList ORDER BY e.id ASC",
+                ActionEntity.class
+        ).getResultList();
+
+        return result;
+    }
+
     public void deleteById(int id) {
         ActionEntity actionEntity = this.getById(id);
         entityManager.remove(actionEntity);

@@ -1,7 +1,5 @@
 package com.example.maintenance.entity;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -25,18 +23,13 @@ public class EventEntity {
 
     @PositiveOrZero
     @NotNull
-    @Column(name = "mileage", columnDefinition = "integer default 0")
-    private Integer mileage = 0;
+    @Column(name = "mileage", nullable = false, columnDefinition = "integer default 0")
+    private Integer mileage;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @NotNull
     @Column(name = "event_date", nullable = false)
     private LocalDate eventDate;
-
-    @ManyToOne
-    @JoinColumn(name="action_id", referencedColumnName="id", insertable=false, updatable=false)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private ActionEntity actionEntity;
 
     public LocalDate getEventDate() {
         return eventDate;
@@ -68,13 +61,5 @@ public class EventEntity {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public ActionEntity getActionEntity() {
-        return actionEntity;
-    }
-
-    public void setActionEntity(ActionEntity actionEntity) {
-        this.actionEntity = actionEntity;
     }
 }
