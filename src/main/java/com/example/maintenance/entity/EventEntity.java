@@ -24,11 +24,13 @@ public class EventEntity {
     private Integer actionId;
 
     @PositiveOrZero
+    @NotNull
     @Column(name = "mileage", columnDefinition = "integer default 0")
     private Integer mileage = 0;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Column(name = "event_date")
+    @NotNull
+    @Column(name = "event_date", nullable = false)
     private LocalDate eventDate;
 
     @ManyToOne

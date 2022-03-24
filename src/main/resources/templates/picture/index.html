@@ -1,0 +1,21 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+    <p>Content here ...</p>
+
+<script>
+    async function deleteActionById(id) {
+        if (!confirm("Подтвердите удаление записи")) {
+            return;
+        }
+        let response = await fetch('/api/action/' + id, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            alert("Ошибка HTTP: " + response.status);
+        }
+    }
+</script>
+
+</th:block>

@@ -5,7 +5,8 @@
         <label for="actionId" class="form-label">Тип работ</label>
         <select id="actionId" name="actionId" class="form-select" required>
             <option selected disabled value="">Выберите регламентную работу</option>
-            <option th:each="action: ${actions}" th:value="${action.getId()}"
+            <option th:each="action: ${actions}"
+                    th:value="${action.getId()}"
                     th:selected="${action.getId()==eventEntity.getActionId()}"
                     th:text="${action.getName()}">
                 Регламентная работа
@@ -18,7 +19,7 @@
         <div class="col">
             <div class="col-md-5">
                 <label for="mileage" class="form-label">Пробег, км</label>
-                <input type="number" id="mileage" th:field="*{mileage}" class="form-control"/>
+                <input type="number" id="mileage" th:field="*{mileage}" class="form-control" required/>
                 <div th:if="${#fields.hasErrors('mileage')}" th:errors="*{mileage}"
                      class="invalid-feedback show">Sort Error</div>
             </div>
@@ -27,7 +28,7 @@
             <div class="col-md-5">
                 <label for="eventDate" class="form-label">Дата проведения работ</label>
                 <input type="date" id="eventDate" name="eventDate" th:value="${eventEntity.getEventDate}"
-                       class="form-control"/>
+                       class="form-control" required/>
                 <div th:if="${#fields.hasErrors('eventDate')}" th:errors="*{eventDate}"
                      class="invalid-feedback show">EventDate Error</div>
             </div>

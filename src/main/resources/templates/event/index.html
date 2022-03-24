@@ -17,10 +17,10 @@
     </thead>
     <tbody>
         <tr th:each="event: ${events}">
-            <th th:text="${event.getId()}">id</th>
-            <th th:text="${event.getActionEntity()?.getName()}">actionId</th>
-            <th th:text="${event.getMileage()}">id</th>
-            <th th:text="${event.getEventDate()}">id</th>
+            <td th:text="${event.getId()}">id</td>
+            <td th:text="${event.getActionEntity()?.getName()}">actionId</td>
+            <td th:text="${event.getMileage()}">id</td>
+            <td th:text="${event.getEventDate()}">id</td>
             <td>
                 <a th:href="@{/event/{id}/edit-form(id=${event.getId()})}">
                     <button type="button" class="btn btn-primary">&#128221;</button>
