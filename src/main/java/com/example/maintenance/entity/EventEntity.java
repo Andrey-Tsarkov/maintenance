@@ -1,5 +1,7 @@
 package com.example.maintenance.entity;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -30,6 +32,11 @@ public class EventEntity {
     @NotNull
     @Column(name = "event_date", nullable = false)
     private LocalDate eventDate;
+
+    @ManyToOne(targetEntity = ActionEntity.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(referencedColumnName = "id", insertable = false, updatable = false)
+    private ActionEntity action;
 
     public LocalDate getEventDate() {
         return eventDate;

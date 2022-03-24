@@ -19,7 +19,7 @@
     <tbody>
         <tr th:each="event: ${events}">
             <td th:text="${event.getId()}">id</td>
-            <td th:text="${actionHashMap[event.getActionId()].getName()}">actionName</td>
+            <td th:text="${actionHashMap[event.getActionId()]?.getName()}">actionName</td>
             <td th:text="${event.getMileage()}">id</td>
             <td th:text="${event.getEventDate()}">id</td>
             <td>

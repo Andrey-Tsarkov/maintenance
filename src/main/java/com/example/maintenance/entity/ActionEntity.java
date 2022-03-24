@@ -1,10 +1,11 @@
 package com.example.maintenance.entity;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -26,9 +27,9 @@ public class ActionEntity {
     private Integer sort;
 
     @OneToMany
-    @JoinColumn(name="action_id", referencedColumnName="id", insertable=false, updatable=false)
+    @JoinColumn(name = "action_id", referencedColumnName = "id", insertable = false, updatable = false)
     @NotFound(action = NotFoundAction.IGNORE)
-    private List<EventEntity> eventEntityList;
+    private List<EventEntity> events;
 
     public Integer getSort() {
         return sort;
@@ -54,11 +55,11 @@ public class ActionEntity {
         this.id = id;
     }
 
-    public List<EventEntity> getEventEntityList() {
-        return eventEntityList;
+    public List<EventEntity> getEvents() {
+        return events;
     }
 
-    public void setEventEntityList(List<EventEntity> eventEntityList) {
-        this.eventEntityList = eventEntityList;
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
     }
 }
