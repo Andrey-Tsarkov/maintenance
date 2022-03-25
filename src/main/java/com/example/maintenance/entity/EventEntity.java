@@ -1,5 +1,6 @@
 package com.example.maintenance.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,6 +29,7 @@ public class EventEntity {
     @Column(name = "mileage", nullable = false, columnDefinition = "integer default 0")
     private Integer mileage;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @NotNull
     @Column(name = "event_date", nullable = false)

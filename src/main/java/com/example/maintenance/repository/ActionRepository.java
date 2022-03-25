@@ -22,7 +22,7 @@ public class ActionRepository {
 
     public List<ActionEntity> getAll() {
         List<ActionEntity> result = entityManager.createQuery(
-                "SELECT e FROM ActionEntity e ORDER BY e.id ASC",
+                "SELECT e FROM ActionEntity e ORDER BY e.sort asc, e.name ASC",
                 ActionEntity.class
         ).getResultList();
 

@@ -1,39 +1,185 @@
 <th:block xmlns:th="http://thymeleaf.org">
 
-<div id="error" style="color: red;"></div>
-<div id="report"></div>
+    <div id="error" style="color: red;"></div>
+    <div id="report"></div>
 
-<script>
-    document.onreadystatechange = function () {
-        if (document.readyState == "complete") {
-            getReport();
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState === "complete") {
+                let reportWidth = document.getElementById("report").offsetWidth;
+                Report.getReport(reportWidth);
+            }
         }
-    }
 
-    function getReport() {
-        fetch('/api/action/report')
-            .then(
-                function(response) {
-                    if (response.status !== 200) {
-                        showError('Ошибка получения данных. Status Code: ' + response.status);
-                    }
-                    response.json().then(function(data) {
-                        buildReport(data);
-                    });
+        Report = {
+            REPORT_DATA_URL: 'http://localhost:8085/api/action/report',
+            REPORT_MIN_WITH: 600,
+
+            report_width: 1200,
+            header_column_width: 200,
+            grid_column_count: 5,
+            point_area_width: 0,
+
+            mileage_min: 0,
+            mileage_max: 0,
+            mileage_grid_min: 0,
+            mileage_grid_max: 0,
+            mileage_grid_step: 0,
+
+            getReport(reportWidth = 0) {
+                let t = this;
+                if (reportWidth < 600) {
+                    reportWidth = t.REPORT_MIN_WITH;
                 }
-            )
-            .catch(function(err) {
-                showError('Fetch Error:', err);
-            });
-    }
+                t.report_width = reportWidth;
 
-    function showError(message) {
-        document.getElementById("error").innerText = message;
-    }
+                fetch(this.REPORT_DATA_URL)
+                    .then(
+                        function (response) {
+                            if (response.status !== 200) {
+                                t.showError('Ошибка получения данных. Status Code: ' + response.status);
+                            }
+                            response.json().then(function (data) {
+                                t.buildHtmlReport(data);
+                            });
+                        }
+                    )
+                    .catch(function (err) {
+                        t.showError('Fetch Error:', err);
+                    });
+            },
 
-    function buildReport(report) {
-        document.getElementById("report").innerText = JSON.stringify(report);
-    }
-</script>
+            showError(message) {
+                document.getElementById("error").innerText = message;
+            },
+
+            buildHtmlReport(report) {
+                this.point_area_width = this.report_width - this.header_column_width;
+                this.setMinMaxMileage(report);
+                this.setGridParameters();
+
+                let result = '<div style="width: ' + this.report_width + 'px">\n\n';
+                result += this.buildHeader();
+                for (let i = 0; i < report.length; i++) {
+                    result += this.buildRow(report[i]);
+                }
+                result += '</div>';
+                document.getElementById("report").innerHTML = result;
+            },
+
+            setMinMaxMileage(report) {
+                for (let reportIndex = 0; reportIndex < report.length; reportIndex++) {
+                    for (let eventIndex = 0; eventIndex < report[reportIndex].events.length; eventIndex++) {
+                        let mileage = report[reportIndex].events[eventIndex].mileage;
+                        if (this.mileage_max < mileage) {
+                            this.mileage_max = mileage;
+                        }
+                        if (mileage < this.mileage_min || 0 === this.mileage_min) {
+                            this.mileage_min = mileage;
+                        }
+                    }
+                }
+            },
+
+            setGridParameters() {
+                let div = this.mileage_max - this.mileage_min;
+                let l = div.toString().length;
+                let k = Math.pow(10, l-1);
+                this.mileage_grid_min = Math.floor(this.mileage_min / k) * k;
+                this.mileage_grid_max = Math.ceil(this.mileage_max / k) * k;
+                let divFix = this.mileage_grid_max - this.mileage_grid_min;
+                this.mileage_grid_step  = Math.round(divFix / this.grid_column_count * 10) / 10;
+                console.log(this.mileage_min, this.mileage_max);
+                console.log(k, this.mileage_grid_min, this.mileage_grid_max, this.mileage_grid_step);
+            },
+
+            buildHeader() {
+                let result = '<div class="axis" style="width: ' + this.report_width + 'px">\n'
+                result += '<div class="axis_header" style="width: ' + this.header_column_width + 'px">Замена \\ Пробег, км</div>\n';
+                for (let i = 0; i < this.grid_column_count; i++) {
+                    let m = this.mileage_grid_min + i * this.mileage_grid_step;
+                    let w = Math.round(this.point_area_width / this.grid_column_count);
+                    result += '<div class="axis_point" style="width: ' + w + 'px">' + m + '</div>\n';
+                }
+                result += '</div>\n\n'
+
+                return result;
+            },
+
+            buildRow(row) {
+                let s = '<div class="line_section" style="width: ' + this.report_width + 'px">';
+                s += '<div class="line_name" style="width: ' + this.header_column_width + 'px">' + row.name + '</div>\n';
+                // s += '<div class="line_name">' + row.name + '</div>\n';
+                s += '<div class="line_points" style="width: ' + this.point_area_width + 'px">&nbsp;\n';
+                let eventCount = row.events.length;
+                if (0 === eventCount) {
+                    return s;
+                }
+
+                for (let i = 0; i < eventCount; i++) {
+                    let event = row.events[i];
+                    let dx = event.mileage - this.mileage_min;
+                    let left = Math.round(dx / (this.mileage_grid_max - this.mileage_grid_min) * this.point_area_width);
+                    s += '<div' +
+                        ' data-date="' + event.eventDate + '"' +
+                        ' data-mileage="' + event.mileage + '"' +
+                        ' title="Пробег: ' + event.mileage + ' \nДата: ' + event.eventDate + '"' +
+                        ' style="left: ' + left + 'px;">&#9733;</div>\n';
+                }
+                s += '</div></div>'+ '\n\n';
+
+                return s;
+            }
+        }
+    </script>
+
+    <style>
+        .axis {
+            background: #c6e2ff;
+            border-bottom: solid #49525b 1px; overflow-x: hidden;
+        }
+        .axis_point {
+            display: inline-block;
+            float: left;
+            border-left: solid #49525b 1px;
+            font-size: 14px;
+            padding-left: 2px;
+        }
+        .axis_header {
+            display: inline-block; float: left;
+            font-size: 14px; padding-left: 2px;
+        }
+        .line_section {
+            overflow-x: hidden;
+            border-bottom: #d1d7dc solid 1px;
+        }
+        .line_section:hover {
+            background: #f3f8ff;
+        }
+        .line_name {
+            float: left;
+            overflow-x: hidden;
+            font-size: 12px; padding-left: 2px;
+        }
+        .line_points {
+            float: left;
+            border-left: solid #d1d7dc 1px;
+            position: relative; padding: 0 2px;
+        }
+        .line_points div {
+            cursor: pointer;
+            position: absolute; top: 0;
+            width: 20px;
+            height: 20px;
+            background: #fffee9;
+            border-radius: 50%;
+            border: #d9d78d 1px solid;
+            text-align: center;
+            margin-top: 2px;
+            margin-left: 0;
+            color: rgba(155, 151, 2, 0.99);
+            font-size: 12px;
+        }
+    </style>
 
 </th:block>
