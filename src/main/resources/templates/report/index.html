@@ -54,10 +54,9 @@
             },
 
             buildHtmlReport(report) {
-                this.point_area_width = this.report_width - this.header_column_width;
                 this.setMinMaxMileage(report);
                 this.setGridParameters();
-
+                this.point_area_width = this.report_width - this.header_column_width;
                 let result = '<div style="width: ' + this.report_width + 'px">\n\n';
                 result += this.buildHeader();
                 for (let i = 0; i < report.length; i++) {
@@ -67,39 +66,17 @@
                 document.getElementById("report").innerHTML = result;
             },
 
-            setMinMaxMileage(report) {
-                for (let reportIndex = 0; reportIndex < report.length; reportIndex++) {
-                    for (let eventIndex = 0; eventIndex < report[reportIndex].events.length; eventIndex++) {
-                        let mileage = report[reportIndex].events[eventIndex].mileage;
-                        if (this.mileage_max < mileage) {
-                            this.mileage_max = mileage;
-                        }
-                        if (mileage < this.mileage_min || 0 === this.mileage_min) {
-                            this.mileage_min = mileage;
-                        }
-                    }
-                }
-            },
-
-            setGridParameters() {
-                let div = this.mileage_max - this.mileage_min;
-                let l = div.toString().length;
-                let k = Math.pow(10, l-1);
-                this.mileage_grid_min = Math.floor(this.mileage_min / k) * k;
-                this.mileage_grid_max = Math.ceil(this.mileage_max / k) * k;
-                let divFix = this.mileage_grid_max - this.mileage_grid_min;
-                this.mileage_grid_step  = Math.round(divFix / this.grid_column_count * 10) / 10;
-                console.log(this.mileage_min, this.mileage_max);
-                console.log(k, this.mileage_grid_min, this.mileage_grid_max, this.mileage_grid_step);
-            },
-
             buildHeader() {
                 let result = '<div class="axis" style="width: ' + this.report_width + 'px">\n'
-                result += '<div class="axis_header" style="width: ' + this.header_column_width + 'px">Замена \\ Пробег, км</div>\n';
+                result += '<div class="axis_header" style="width: ' + this.header_column_width + 'px">Замена \\ Пробег, тыс. км</div>\n';
                 for (let i = 0; i < this.grid_column_count; i++) {
                     let m = this.mileage_grid_min + i * this.mileage_grid_step;
                     let w = Math.round(this.point_area_width / this.grid_column_count);
-                    result += '<div class="axis_point" style="width: ' + w + 'px">' + m + '</div>\n';
+                    result += '<div class="axis_point"';
+                    if (i < this.grid_column_count - 1) {
+                        result += ' style="width: ' + w + 'px"';
+                    }
+                    result += '>' + this.roundByThousand(m) + '</div>\n';
                 }
                 result += '</div>\n\n'
 
@@ -107,18 +84,20 @@
             },
 
             buildRow(row) {
-                let s = '<div class="line_section" style="width: ' + this.report_width + 'px">';
-                s += '<div class="line_name" style="width: ' + this.header_column_width + 'px">' + row.name + '</div>\n';
-                // s += '<div class="line_name">' + row.name + '</div>\n';
-                s += '<div class="line_points" style="width: ' + this.point_area_width + 'px">&nbsp;\n';
-                let eventCount = row.events.length;
-                if (0 === eventCount) {
-                    return s;
+                if (0 === row.events.length) {
+                    return '';
+                }
+                if (0 === this.mileage_grid_max - this.mileage_grid_min) {
+                    console.log('Error grid (max-min=0');
+                    return '';
                 }
 
-                for (let i = 0; i < eventCount; i++) {
+                let s = '<div class="line_section" style="width: ' + this.report_width + 'px">';
+                s += '<div class="line_name" style="width: ' + this.header_column_width + 'px">' + row.name + '</div>\n';
+                s += '<div class="line_points" style="width: ' + this.point_area_width + 'px">&nbsp;\n';
+                for (let i = 0; i < row.events.length; i++) {
                     let event = row.events[i];
-                    let dx = event.mileage - this.mileage_min;
+                    let dx = event.mileage - this.mileage_grid_min;
                     let left = Math.round(dx / (this.mileage_grid_max - this.mileage_grid_min) * this.point_area_width);
                     s += '<div' +
                         ' data-date="' + event.eventDate + '"' +
@@ -129,6 +108,93 @@
                 s += '</div></div>'+ '\n\n';
 
                 return s;
+            },
+
+            /**
+             * Рассчитать и установить параметры сетки (ось пробега)
+             */
+            setGridParameters() {
+                console.log('SRC min/ max', this.mileage_min, this.mileage_max);
+                // если левая границы много меньше правой, то начнем ее с 0
+                if (this.mileage_min/this.mileage_max < .1) {
+                    this.mileage_min = 0;
+                }
+
+                // пробуем рассчитать "красивые" значения границ для сетки и округляем границы
+                let k = Math.pow(10, this.mileage_max.toString().length - 2);
+                this.mileage_grid_min = Math.floor(this.mileage_min / k) * k;
+                this.mileage_grid_max = Math.ceil(this.mileage_max / k) * k;
+
+                // поищем количество шагов и уточним границы
+                let stepDetails = this.getStepDetails(this.mileage_grid_min, this   .mileage_grid_max);
+                this.grid_column_count = stepDetails[0];
+                this.mileage_grid_step = stepDetails[1];
+                this.mileage_grid_max = this.mileage_grid_min + this.mileage_grid_step * this.grid_column_count;
+                console.log('Updated min/max', this.mileage_grid_min, this.mileage_grid_max);
+                console.log('Grid count / step value', this.grid_column_count, this.mileage_grid_step);
+            },
+
+            /**
+             * Рассчитать количество делений и шаг (нужны "красивые" шаги) [stepCount, stepValue]
+             */
+            getStepDetails(min, max) {
+                let div = max - min;
+                let step = 0;
+                // комбинации количества шагов и их значений
+                let stepCountVariants = [ [5, 0], [4, 0], [6, 0], [7, 0], [8, 0], [9, 0], [10, 0] ];
+                for (let i = 0; i < stepCountVariants.length; i++) {
+                    step = Math.round(div / stepCountVariants[i][0]);
+                    let s = step.toString();
+                    for (let j = s.length - 1; j >= 0; j--) {
+                        let char = s.substring(j, j + 1);
+                        if ('0' !== char) {
+                            stepCountVariants[i][1] = j;
+                            break;
+                        }
+                    }
+                }
+                // наиболее округленный шаг
+                stepCountVariants.sort(function(a, b) {
+                    return a[1] - b[1];
+                });
+                let stepCount = stepCountVariants[0][0];
+                // округлим шаг
+                step  = Math.round(div / stepCount);
+                let k = Math.pow(10, step.toString().length - 1);
+                step = Math.round(step / k) * k;
+                // проверим выход за max
+                let oversupply = div - step * stepCount;
+                if (0 < oversupply) {
+                    stepCount += Math.ceil(oversupply / step);
+                }
+
+                return [stepCount, step];
+            },
+
+            setMinMaxMileage(report) {
+                let isMinValueInit = false;
+                for (let reportIndex = 0; reportIndex < report.length; reportIndex++) {
+                    for (let eventIndex = 0; eventIndex < report[reportIndex].events.length; eventIndex++) {
+                        let mileage = report[reportIndex].events[eventIndex].mileage;
+                        if (this.mileage_max < mileage) {
+                            this.mileage_max = mileage;
+                        }
+                        if (false === isMinValueInit || mileage < this.mileage_min) {
+                            isMinValueInit = true;
+                            this.mileage_min = mileage;
+                        }
+                    }
+                }
+            },
+
+            roundByThousand(i) {
+                if (0 !== i && i < 1000) {
+                    return (.001 * i).toFixed(3);
+                }
+
+                let n = (.001 * i).toFixed(1);
+
+                return  '.0' === n.substring(n.length - 2) ? n.substring(0, n.length - 2) : n;
             }
         }
     </script>
@@ -136,7 +202,8 @@
     <style>
         .axis {
             background: #c6e2ff;
-            border-bottom: solid #49525b 1px; overflow-x: hidden;
+            border-bottom: solid #49525b 1px;
+            overflow-x: hidden;
         }
         .axis_point {
             display: inline-block;
@@ -146,8 +213,10 @@
             padding-left: 2px;
         }
         .axis_header {
-            display: inline-block; float: left;
-            font-size: 14px; padding-left: 2px;
+            display: inline-block;
+            float: left;
+            font-size: 14px;
+            padding-left: 2px;
         }
         .line_section {
             overflow-x: hidden;
@@ -159,12 +228,14 @@
         .line_name {
             float: left;
             overflow-x: hidden;
-            font-size: 12px; padding-left: 2px;
+            font-size: 12px;
+            padding-left: 2px;
         }
         .line_points {
             float: left;
             border-left: solid #d1d7dc 1px;
-            position: relative; padding: 0 2px;
+            position: relative;
+            padding: 0 2px;
         }
         .line_points div {
             cursor: pointer;
