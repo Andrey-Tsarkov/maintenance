@@ -16,7 +16,9 @@
             REPORT_MIN_WITH: 600,
 
             report_width: 1200,
-            header_column_width: 200,
+            header_column_width: 240,
+            axis_left_margin: 15,
+            axis_right_margin: 35,
             grid_column_count: 5,
             point_area_width: 0,
 
@@ -68,16 +70,22 @@
 
             buildHeader() {
                 let result = '<div class="axis" style="width: ' + this.report_width + 'px">\n'
-                result += '<div class="axis_header" style="width: ' + this.header_column_width + 'px">Замена \\ Пробег, тыс. км</div>\n';
+                result += '<div class="axis_header" ' +
+                    'style="width: ' + (this.header_column_width - this.axis_left_margin - this.axis_right_margin) + 'px">' +
+                    'Замена \\ Пробег, тыс. км' +
+                    '</div>\n';
+                result += '<div class="axis_left_margin" style="width: ' + this.axis_left_margin + 'px">&nbsp;</div>\n';
+                let m = 0;
                 for (let i = 0; i < this.grid_column_count; i++) {
-                    let m = this.mileage_grid_min + i * this.mileage_grid_step;
-                    let w = Math.round(this.point_area_width / this.grid_column_count);
+                    m = this.mileage_grid_min + i * this.mileage_grid_step;
+                    let w = Math.round(this.point_area_width / this.grid_column_count * 10) / 10;
                     result += '<div class="axis_point"';
-                    if (i < this.grid_column_count - 1) {
-                        result += ' style="width: ' + w + 'px"';
-                    }
+                    result += ' style="width: ' + w + 'px"';
                     result += '>' + this.roundByThousand(m) + '</div>\n';
                 }
+                m = this.roundByThousand(m + this.mileage_grid_step);
+                result += '<div class="axis_right_margin" title="' + m + '" ' +
+                    'style="width: ' + (this.axis_right_margin - 3) + 'px">' + m + '</div>\n';
                 result += '</div>\n\n'
 
                 return result;
@@ -87,13 +95,12 @@
                 if (0 === row.events.length) {
                     return '';
                 }
-                if (0 === this.mileage_grid_max - this.mileage_grid_min) {
-                    console.log('Error grid (max-min=0');
-                    return '';
-                }
 
                 let s = '<div class="line_section" style="width: ' + this.report_width + 'px">';
-                s += '<div class="line_name" style="width: ' + this.header_column_width + 'px">' + row.name + '</div>\n';
+                s += '<div class="line_name" ' +
+                    'style="width: ' + (this.header_column_width - this.axis_left_margin - this.axis_right_margin) + 'px"' +
+                    '>' + row.name + '</div>\n';
+                s += '<div class="axis_left_margin" style="width: ' + this.axis_left_margin + 'px">&nbsp;</div>\n';
                 s += '<div class="line_points" style="width: ' + this.point_area_width + 'px">&nbsp;\n';
                 for (let i = 0; i < row.events.length; i++) {
                     let event = row.events[i];
@@ -185,6 +192,10 @@
                         }
                     }
                 }
+                if (0 === this.mileage_max - this.mileage_min) {
+                    this.mileage_min = Math.round(this.mileage_max * 0.9);
+                    this.mileage_max = Math.round(this.mileage_max * 1.1);
+                }
             },
 
             roundByThousand(i) {
@@ -208,6 +219,19 @@
         .axis_point {
             display: inline-block;
             float: left;
+            border-left: solid #49525b 1px;
+            font-size: 14px;
+            padding-left: 2px;
+        }
+        .axis_left_margin {
+            display: inline-block;
+            float: left;
+            font-size: 14px;
+        }
+        .axis_right_margin {
+            display: inline-block;
+            float: left;
+            overflow-x: hidden;
             border-left: solid #49525b 1px;
             font-size: 14px;
             padding-left: 2px;
@@ -247,7 +271,7 @@
             border: #d9d78d 1px solid;
             text-align: center;
             margin-top: 2px;
-            margin-left: 0;
+            margin-left: -10px;
             color: rgba(155, 151, 2, 0.99);
             font-size: 12px;
         }

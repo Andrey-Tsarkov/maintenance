@@ -36,8 +36,9 @@ public class EventEntity {
     private LocalDate eventDate;
 
     @ManyToOne(targetEntity = ActionEntity.class)
-    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(referencedColumnName = "id", insertable = false, updatable = false)
+    // игнорируем консистетность данных
+    @NotFound(action = NotFoundAction.IGNORE)
     private ActionEntity action;
 
     public LocalDate getEventDate() {

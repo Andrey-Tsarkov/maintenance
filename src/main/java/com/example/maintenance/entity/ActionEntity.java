@@ -28,6 +28,7 @@ public class ActionEntity {
 
     @OneToMany
     @JoinColumn(name = "action_id", referencedColumnName = "id", insertable = false, updatable = false)
+    // игнорируем консистетность данных
     @NotFound(action = NotFoundAction.IGNORE)
     private List<EventEntity> events;
 
