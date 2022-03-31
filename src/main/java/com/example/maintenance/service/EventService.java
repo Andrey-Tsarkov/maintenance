@@ -7,7 +7,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public record EventService(EventRepository eventRepository) {
+public class EventService {
+    private final EventRepository eventRepository;
+
+    public EventService(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
     public void deleteById(int id) {
         eventRepository.deleteById(id);
     }

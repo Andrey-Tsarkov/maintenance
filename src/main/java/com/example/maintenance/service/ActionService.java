@@ -8,7 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public record ActionService(ActionRepository actionRepository) {
+public class ActionService {
+    private final ActionRepository actionRepository;
+
+    public ActionService(ActionRepository actionRepository) {
+        this.actionRepository = actionRepository;
+    }
+
     public void deleteById(int id) {
         actionRepository.deleteById(id);
     }
