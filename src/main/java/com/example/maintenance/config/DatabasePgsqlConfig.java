@@ -26,13 +26,13 @@ public class DatabasePgsqlConfig {
     public static final String DATA_SOURCE = "pgsqlDataSource";
 
     @Bean(DATA_SOURCE)
-    public DataSource appDataSource(PgsqlConfig postgresConfig) {
+    public DataSource appDataSource(PgsqlParameters pgsqlParameters) {
         return DataSourceBuilder
                 .create()
-                .username(postgresConfig.getUser())
-                .password(postgresConfig.getPassword())
-                .url(postgresConfig.getUrl())
-                .driverClassName(postgresConfig.getDriver())
+                .username(pgsqlParameters.getUser())
+                .password(pgsqlParameters.getPassword())
+                .url(pgsqlParameters.getUrl())
+                .driverClassName(pgsqlParameters.getDriver())
                 .build();
     }
 

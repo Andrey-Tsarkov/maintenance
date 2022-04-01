@@ -7,7 +7,22 @@
 
 В основе бекенда проекта лежит java spring с хранением данных в postgresql.
 
-Фронт использует как шаблонизатор thymeleaf, так и REST API.
+Фронт использует как шаблонизатор thymeleaf, 
+так и REST API для отправки запросов, получения данных в формате json.
+Стилевое офрмление front основано на Bootstrap v5.1.3.
 
+Настройки проекта для локального запуска в application.properties.
+
+### БД
 Для разворачивания таблиц БД postgresql можно воспользоваться migrate.sql.
-Все настройки проекта в application.properties.
+
+### Docker
+Для запуска в контейнере docker необходимо собрать jar файл в папке target, уточнить настройки в файле .env, запустить контейнер:
+- docker-compose up -d
+
+Просмотреть логи в контейнере:
+- docker logs maintenance.
+
+Для пересборки контейнера (при изменениях в проекте пересобрать .jar):
+- docker-compose stop
+- docker-compose up -d --build

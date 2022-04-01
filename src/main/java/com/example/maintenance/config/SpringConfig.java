@@ -75,7 +75,7 @@ public class SpringConfig implements WebMvcConfigurer {
         return filterRegistration;
     }
 
-    // Определить CORS
+    // Определить CORS, пусть в проекте будет разрешено
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
     }

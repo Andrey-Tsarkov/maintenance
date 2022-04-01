@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @PropertySource("classpath:application.properties")
-public class PgsqlConfig {
+public class PgsqlParameters {
     @Value("${POSTGRES_USER}")
     private String user;
 
