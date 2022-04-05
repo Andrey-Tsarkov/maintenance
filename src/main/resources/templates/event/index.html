@@ -4,6 +4,13 @@
     <a th:href="@{/event/create-form}"><button type="button" class="btn btn-primary">Создать</button></a>
 </div>
 
+<ul class="pagination" th:if="${totalPages > 1}">
+    <li th:each="page, iter: ${#numbers.sequence(0, totalPages - 1)}"
+        th:classappend="${page==currentPage} ? 'page-item active' : 'page-item'">
+        <a class="page-link" th:href="@{?page={p}(p=${page})}" th:text="${iter.count}" >page</a>
+    </li>
+</ul>
+
 <table class="table table-bordered table-hover" th:object="${actionHashMap}">
     <thead class="table-primary">
         <tr>

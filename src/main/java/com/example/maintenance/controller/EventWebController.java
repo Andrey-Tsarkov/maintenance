@@ -3,6 +3,8 @@ package com.example.maintenance.controller;
 import com.example.maintenance.entity.EventEntity;
 import com.example.maintenance.service.ActionService;
 import com.example.maintenance.service.EventService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +25,15 @@ public class EventWebController extends AbstractWebController {
     }
 
     @GetMapping(value = "")
-    public String viewList(Model model) {
+    public String viewList(Model model, Pageable pageable) {
         model.addAttribute("content", "event/index");
         model.addAttribute("title", "Проведенные работы");
-        model.addAttribute("events", eventService.getAll());
+
+        Page<EventEntity> page = eventService.getCustomList(pageable);
+        model.addAttribute("events", page.getContent());
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("totalPages", page.getTotalPages());
+
         model.addAttribute("actionHashMap", actionService.getHashMapAll());
 
         return this.getBaseLayoutTemplate();

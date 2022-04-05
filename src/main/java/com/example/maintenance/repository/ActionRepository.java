@@ -31,7 +31,7 @@ public class ActionRepository {
 
     public List<ActionEntity> getReport() {
         List<ActionEntity> result = entityManager.createQuery(
-                "SELECT DISTINCT e FROM ActionEntity e LEFT JOIN FETCH e.events ORDER BY e.id ASC",
+                "SELECT DISTINCT e FROM ActionEntity e LEFT JOIN FETCH e.events ORDER BY e.sort ASC",
                 ActionEntity.class
         ).getResultList();
 
