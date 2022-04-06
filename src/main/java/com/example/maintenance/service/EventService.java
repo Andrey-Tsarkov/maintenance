@@ -2,7 +2,6 @@ package com.example.maintenance.service;
 
 import com.example.maintenance.entity.EventEntity;
 import com.example.maintenance.repository.EventJpaRepository;
-import com.example.maintenance.repository.EventRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,17 +14,15 @@ import java.util.List;
 @Service
 public class EventService {
     private final int LIMIT = 10;
-    private final EventRepository eventRepository;
 
     private final EventJpaRepository eventJpaRepository;
 
-    public EventService(EventRepository eventRepository, EventJpaRepository eventJpaRepository) {
-        this.eventRepository = eventRepository;
+    public EventService(EventJpaRepository eventJpaRepository) {
         this.eventJpaRepository = eventJpaRepository;
     }
 
     public void deleteById(int id) {
-        eventRepository.deleteById(id);
+        eventJpaRepository.deleteById(id);
     }
 
     public Page<EventEntity> getCustomList(Pageable pageable) {
@@ -38,14 +35,16 @@ public class EventService {
     }
 
     public EventEntity getById(int id) {
-        return eventRepository.getById(id);
+        return eventJpaRepository.getById(id);
     }
 
     public void save(EventEntity eventEntity) {
-        eventRepository.save(eventEntity);
+        eventJpaRepository.save(eventEntity);
     }
 
     public EventEntity create(EventEntity eventEntity) {
-        return eventRepository.create(eventEntity);
+        eventJpaRepository.save(eventEntity);
+
+        return eventEntity;
     }
 }

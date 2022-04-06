@@ -6,7 +6,7 @@
 
 <ul class="pagination" th:if="${totalPages > 1}">
     <li th:each="page, iter: ${#numbers.sequence(0, totalPages - 1)}"
-        th:classappend="${page==currentPage} ? 'page-item active' : 'page-item'">
+        th:classappend="'page-item ' + (${page==currentPage} ? 'active' : '')">
         <a class="page-link" th:href="@{?page={p}(p=${page})}" th:text="${iter.count}" >page</a>
     </li>
 </ul>
