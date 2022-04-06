@@ -42,7 +42,7 @@ public class EventWebController extends AbstractWebController {
     @GetMapping(value = "create-form")
     public String viewCreateForm(Model model) {
         model.addAttribute("title", "Создание проведеной работы");
-        model.addAttribute("content", "event/create");
+        model.addAttribute("content", "event/edit");
         model.addAttribute("eventEntity", new EventEntity());
         model.addAttribute("actions", actionService.getAll());
 
@@ -57,7 +57,7 @@ public class EventWebController extends AbstractWebController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("title", "Создание проведеной работы (уточнение полей)");
-            model.addAttribute("content", "event/create");
+            model.addAttribute("content", "event/edit");
             model.addAttribute("eventEntity", eventEntity);
             model.addAttribute("actions", actionService.getAll());
 

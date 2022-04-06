@@ -1,6 +1,10 @@
 <th:block xmlns:th="http://thymeleaf.org">
 
-<form th:method="PUT" th:action="@{/event/{id}(id=${eventEntity.getId()})}" th:object="${eventEntity}">
+<form th:method="(${eventEntity.getId()} ? 'PUT' : 'POST')"
+      th:action="@{/event/{event_identity}(event_identity=
+        (${eventEntity.getId()} ? ${eventEntity.getId()} : 'add')
+      )}"
+      th:object="${eventEntity}">
     <div class="mb-3">
         <label for="actionId" class="form-label">Тип работ</label>
         <select id="actionId" name="actionId" class="form-select" required>

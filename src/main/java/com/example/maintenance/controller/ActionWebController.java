@@ -31,7 +31,7 @@ public class ActionWebController extends AbstractWebController {
     @GetMapping(value = "/create-form")
     public String viewCreateForm(Model model) {
         model.addAttribute("title", "Создание регламентной работы");
-        model.addAttribute("content", "action/create");
+        model.addAttribute("content", "action/edit");
         model.addAttribute("actionEntity", new ActionEntity());
 
         return this.getBaseLayoutTemplate();
@@ -45,7 +45,7 @@ public class ActionWebController extends AbstractWebController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("title", "Создание регламентной работы (уточнение полей)");
-            model.addAttribute("content", "action/create");
+            model.addAttribute("content", "action/edit");
             model.addAttribute("actionEntity", actionEntity);
 
             return this.getBaseLayoutTemplate();

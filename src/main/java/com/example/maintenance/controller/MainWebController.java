@@ -20,6 +20,5 @@ public class MainWebController extends AbstractWebController {
         model.addAttribute("title", "Отчет");
 
         return this.getBaseLayoutTemplate();
-
     }
 }

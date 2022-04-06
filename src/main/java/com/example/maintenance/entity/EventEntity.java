@@ -1,8 +1,6 @@
 package com.example.maintenance.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;

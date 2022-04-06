@@ -1,6 +1,10 @@
 <th:block xmlns:th="http://thymeleaf.org">
 
-<form th:method="PUT" th:action="@{/action/{id}(id=${actionEntity.getId()})}" th:object="${actionEntity}">
+<form th:method="(${actionEntity.getId()} ? 'PUT' : 'POST')"
+      th:action="@{/action/{action_identity}(action_identity=
+        (${actionEntity.getId()} ? ${actionEntity.getId()} : 'add')
+      )}"
+      th:object="${actionEntity}">
     <div class="mb-3">
         <label for="name" class="form-label">Название работ</label>
         <input type="text" id="name" th:field="*{name}" class="form-control" minlength="3" required/>
