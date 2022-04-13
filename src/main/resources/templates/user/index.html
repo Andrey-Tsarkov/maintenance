@@ -1,0 +1,37 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<table class="table table-bordered table-hover" th:object="${users}">
+    <thead class="table-primary">
+        <tr>
+            <th>Id</th>
+            <th>Логин</th>
+            <th>Удалить</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="user: ${users}">
+            <td th:text="${user.getId()}">id</td>
+            <td th:text="${user.getUsername()}">id</td>
+            <td><button type="button" th:onclick="deleteUserById([[${user.getId()}]]);"
+                        class="btn btn-danger">X</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    async function deleteUserById(id) {
+        if (!confirm("Подтвердите удаление записи")) {
+            return;
+        }
+        let response = await fetch('/api/user/' + id, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            alert("Ошибка HTTP: " + response.status);
+        }
+    }
+</script>
+
+</th:block>

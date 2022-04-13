@@ -1,0 +1,42 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<form th:method="POST"
+      th:action="@{/registration}"
+      th:object="${userEntity}">
+    <div class="row mb-3">
+        <div class="col">
+            <div class="col-md-5">
+                <input type="text" id="username" th:field="*{username}" minlength="3" required
+                       class="form-control" placeholder="Username" autofocus="autofocus"/>
+                <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                     class="invalid-feedback show">username Error
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="col-md-5">
+                <input type="password" id="password" th:field="*{password}" required
+                       class="form-control" placeholder="Password"/>
+                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                     class="invalid-feedback show">password Error
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div class="col-md-5">
+                <input type="password" id="passwordConfirm" th:field="*{passwordConfirm}" required
+                       class="form-control" placeholder="Confirm your password"/>
+                <div th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"
+                     class="invalid-feedback show">passwordConfirm Error
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+</form>
+
+</th:block>

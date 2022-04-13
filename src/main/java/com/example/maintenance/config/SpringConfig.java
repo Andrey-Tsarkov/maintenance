@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.*;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -52,6 +53,7 @@ public class SpringConfig implements WebMvcConfigurer {
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(this.templateResolver());
+        templateEngine.addDialect(new SpringSecurityDialect());
         templateEngine.setEnableSpringELCompiler(true);
 
         return templateEngine;

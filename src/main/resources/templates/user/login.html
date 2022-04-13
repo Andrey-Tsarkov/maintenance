@@ -1,0 +1,18 @@
+<th:block xmlns:th="http://thymeleaf.org">
+
+<form th:method="POST"
+      th:action="@{/login}"
+      th:object="${userEntity}">
+    <div class="col-md-3 mb-3">
+        <input type="text" id="username" th:field="*{username}" minlength="1" required
+               class="form-control" autofocus="autofocus" placeholder="Username"/>
+    </div>
+    <div class="col-md-3">
+        <input type="password" id="password" th:field="*{password}"minlength="1" required
+               class="form-control" placeholder="Password"/>
+    </div>
+    <div class="mb-3"></div>
+    <button type="submit" class="btn btn-primary">Войти</button>
+</form>
+
+</th:block>
